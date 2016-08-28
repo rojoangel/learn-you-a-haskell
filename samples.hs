@@ -81,7 +81,7 @@ calcBmis xs = [bmi w h | (w, h) <- xs]
 --
 
 cylinder :: Double -> Double -> Double
-cylinder r h = 
+cylinder r h =
     let sideArea = 2 * pi * r * h
         topArea = pi * r ^ 2
     in sideArea + 2 * topArea
@@ -113,7 +113,7 @@ describeList' ls = "The list is " ++ what ls
 
 --
 -- recursion
--- 
+--
 
 maximum' :: (Ord a) => [a] -> a
 maximum' []     = error "maximum of empty list!"
@@ -136,7 +136,7 @@ reverse' []    = []
 reverse' (x:xs) = reverse' xs ++ [x]
 
 repeat' :: a -> [a]
-repeat' x = x : repeat' x 
+repeat' x = x : repeat' x
 
 zip' :: [a] -> [b] -> [(a, b)]
 zip' [] _          = []
@@ -162,3 +162,25 @@ quicksort' (x:xs) = quicksort' smallerOrEqual ++ [x] ++ quicksort' greater
     where smallerOrEqual = [a | a <- xs, a <= x]
           greater        = [a | a <- xs, a > x]
 
+--
+-- higher order & curried functions
+--
+compareWithHundred :: Int -> Ordering
+compareWithHundred x = compare 100 x
+
+compareWithHundred' :: Int -> Ordering
+compareWithHundred' = compare 100
+
+divideByTen :: (Floating a) => a -> a
+divideByTen = (/10)
+
+isUpperAlphanum :: Char -> Bool
+isUpperAlphanum = (`elem` ['A'..'Z'])
+
+applyTwice :: (a -> a) -> a -> a
+applyTwice f x = f (f x)
+
+zipWith' :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWith' _ [] _          = []
+zipWith' _ _ []          = []
+zipWith' f (x:xs) (y:ys) = f x y : zipWith' f xs ys
