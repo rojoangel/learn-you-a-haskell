@@ -191,3 +191,91 @@ flip' f = g
 
 flip'' :: (a -> b -> c) -> (b -> a -> c)
 flip'' f y x = f x y
+
+-- map
+map' :: (a -> b) -> [a] -> [b]
+map' _ [] = []
+map' f (x:xs) = f x : map' f xs
+
+-- using list comprenhension, instead
+map'' :: (a -> b) -> [a] -> [b]
+map'' f xs = [f x | x <- xs]
+
+-- filter
+filter' :: (a -> Bool) -> [a] -> [a]
+filter' _ [] = []
+filter' f (x:xs)
+    | f x       = x : filter' f xs
+    | otherwise = filter' f xs
+
+-- using list comprenhension, instead
+filter'' :: (a -> Bool) -> [a] -> [a]
+filter'' f xs = [x | x <- xs, f x]
+
+-- quicksort using filter
+quicksort'' :: (Ord a) => [a] -> [a]
+quicksort'' [] = []
+quicksort'' (x:xs) = quicksort'' smallerOrEqual ++ [x] ++ quicksort'' greater
+    where smallerOrEqual = filter (<= x) xs
+          greater = filter (> x) xs
+
+-- largest number under 100,000 that's divisible by 3,829
+largestDivisible :: Integer
+largestDivisible = head (filter divisible [100000,99999..])
+    where divisible x = x `mod` 3829 == 0
+
+-- sum of all odd squares that are less than 10,000
+oddSquaresSum :: Integer
+oddSquaresSum = sum (takeWhile (< 10000) (filter odd (map (^2) [1..])))
+
+-- using list comprenhension, instead
+oddSquaresSum' :: Integer
+oddSquaresSum' = sum (takeWhile (< 10000)[ y |y <- [x^2 | x <- [1..]], odd y])
+
+-- collatz chain
+chain :: Integer -> [Integer]
+chain 1 = [1]
+chain n
+    | even n = n : chain (n `div` 2)
+    | odd n  = n : chain (3 * n + 1)
+
+-- numLongChains
+numLongChains :: Int
+numLongChains = length (filter longerThan15 (map chain [1..100]))
+    where longerThan15 xs = length xs > 15
+
+--
+-- lambdas
+--
+numLongChains' :: Int
+numLongChains' = length (filter (\xs -> length xs > 15) (map chain [1..100]))
+
+addThree :: Int -> Int -> Int -> Int
+addThree = \x -> \y -> \z -> x + y + z
+-- addThree x y z = x + y + z
+
+flip''' :: (a -> b -> c) -> (b -> a -> c)
+flip''' f = \x y -> f y x
+
+--
+-- folds
+--
+sum'' :: (Num a) => [a] -> a
+sum'' xs = foldl (\acc x -> acc + x) 0 xs
+
+-- taking advantage of currying
+sum''' :: (Num a) => [a] -> a
+sum''' = foldl (+) 0
+-- sum''' xs = foldl (+) 0 xs
+
+-- map using foldr
+map''' :: (a -> b) -> [a] -> [b]
+map''' f xs = foldr (\x acc -> f x : acc) [] xs
+
+-- map using foldl
+map'''' :: (a -> b) -> [a] -> [b]
+map'''' f xs = foldl (\acc x -> acc ++ [f x] ) [] xs
+
+-- elem using foldr
+elem'' :: (Eq a) => a -> [a] -> Bool
+elem'' y ys = foldr (\x acc -> if x == y then True else acc) False ys
