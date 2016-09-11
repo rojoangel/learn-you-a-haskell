@@ -279,3 +279,39 @@ map'''' f xs = foldl (\acc x -> acc ++ [f x] ) [] xs
 -- elem using foldr
 elem'' :: (Eq a) => a -> [a] -> Bool
 elem'' y ys = foldr (\x acc -> if x == y then True else acc) False ys
+
+-- maximum using foldl1
+maximum'' :: (Ord a) => [a] -> a
+maximum'' = foldl1 max
+
+-- reverse using foldl
+reverse'' :: [a] -> [a]
+reverse'' = foldl (\acc x -> x : acc) []
+
+reverse''' :: [a] -> [a]
+reverse''' = foldl (flip (:)) []
+
+-- product using foldl
+product' :: (Num a) => [a] -> a
+product' = foldl (*) 1
+
+-- filter using foldr
+filter''' :: (a -> Bool) -> [a] -> [a]
+filter''' p = foldr (\x acc -> if p x then x : acc else acc) []
+
+-- last using foldl1
+last' :: [a] -> a
+last' = foldl1 (\_ x -> x)
+
+-- and using foldr - that works on infinite lists
+and' :: [Bool] -> Bool
+and' xs = foldr (&&) True xs
+
+and'' :: [Bool] -> Bool
+and'' xs = foldl (&&) True xs
+
+-- scans
+-- How many elements does it take for the sum of
+-- the square roots of all natural numbers to exceed 1000
+sqrtSums :: Int
+sqrtSums = length (takeWhile (< 1000) (scanl1 (+) (map sqrt [1..]))) +1
